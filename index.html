@@ -29,11 +29,10 @@
       border: 1px solid #261f18;
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.95);
     }
-    .crimson-glow {
-      box-shadow: 0 0 15px rgba(185, 28, 28, 0.25);
-    }
-    .gold-glow {
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+    .parchment-panel {
+      background: radial-gradient(circle, #1a1510 0%, #0e0b08 100%);
+      border: 1px solid #4a3b2b;
+      box-shadow: inset 0 0 35px rgba(0,0,0,0.9);
     }
 
     /* Scrollbars */
@@ -59,14 +58,6 @@
       cursor: pointer;
       border: 2px solid #14110e;
       box-shadow: 0 0 6px #000;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { border-color: #5c4731; }
-      50% { border-color: #c59b27; }
-    }
-    .pulse-border {
-      animation: pulseGlow 2.5s infinite;
     }
   </style>
 </head>
@@ -99,7 +90,7 @@
         <span id="stat-gold" class="text-yellow-400 font-bold font-mono-code">240</span>
       </div>
 
-      <div class="flex items-center gap-2 iron-inset px-3 py-1.5 rounded border border-[#2e2319]">
+      <div class="flex items-center gap-2 iron-inset px-3 py-1.5 rounded border border-[#2e2319]" title="Crown satisfaction. Low favor leads to dismissal.">
         <span class="text-[#8c775f]">Crown Favor:</span>
         <div class="w-16 bg-[#18130f] h-2 rounded overflow-hidden border border-[#3c2f21]">
           <div id="stat-favor-bar" class="bg-amber-500 h-full w-[65%] transition-all duration-300"></div>
@@ -107,7 +98,7 @@
         <span id="stat-favor-txt" class="text-amber-300 font-mono-code">65%</span>
       </div>
 
-      <div class="flex items-center gap-2 iron-inset px-3 py-1.5 rounded border border-[#2e2319]">
+      <div class="flex items-center gap-2 iron-inset px-3 py-1.5 rounded border border-[#2e2319]" title="Public calm. 0% triggers a violent scaffold riot.">
         <span class="text-[#8c775f]">Public Order:</span>
         <div class="w-16 bg-[#18130f] h-2 rounded overflow-hidden border border-[#3c2f21]">
           <div id="stat-order-bar" class="bg-emerald-600 h-full w-[70%] transition-all duration-300"></div>
@@ -115,7 +106,7 @@
         <span id="stat-order-txt" class="text-emerald-400 font-mono-code">70%</span>
       </div>
 
-      <div class="flex items-center gap-2 iron-inset px-3 py-1.5 rounded border border-[#2e2319]">
+      <div class="flex items-center gap-2 iron-inset px-3 py-1.5 rounded border border-[#2e2319]" title="Watch suspicion. 100% brings an armed raid.">
         <span class="text-[#b91c1c]">Watch Heat:</span>
         <div class="w-16 bg-[#18130f] h-2 rounded overflow-hidden border border-[#3c2f21]">
           <div id="stat-heat-bar" class="bg-red-700 h-full w-[12%] transition-all duration-300"></div>
@@ -181,7 +172,7 @@
           <div id="prisoner-list" class="space-y-2 overflow-y-auto max-h-[460px] pr-1"></div>
         </div>
         <div class="mt-3 pt-3 border-t border-[#362a1e] text-xs text-[#8c775f] italic">
-          Select a subject to inspect weight, neck resistance, and the Crown's exact sentence.
+          Select a subject to inspect weight, neck resistance, traits, and the Crown's exact sentence.
         </div>
       </div>
 
@@ -208,7 +199,30 @@
         </div>
 
         <!-- Dynamic Controls -->
-        <div id="calibration-controls" class="iron-inset p-4 rounded mb-4 border border-[#362a1e] space-y-4"></div>
+        <div id="calibration-controls" class="iron-inset p-4 rounded mb-3 border border-[#362a1e] space-y-4"></div>
+
+        <!-- Dynamic Kinetic Visual Tolerance Gauge -->
+        <div class="iron-inset p-3 rounded border border-[#312519] mb-3">
+          <div class="flex justify-between text-[11px] font-cinzel text-[#a4917a] mb-1">
+            <span>Kinetic Delivered Ratio</span>
+            <span id="gauge-ratio-label" class="font-mono-code text-amber-300">100% (Target Zone)</span>
+          </div>
+          <div class="relative w-full h-3 bg-[#130f0c] rounded overflow-hidden border border-[#423223]">
+            <!-- Red Zone (Under) -->
+            <div class="absolute left-0 top-0 bottom-0 w-[35%] bg-amber-950/60 border-r border-amber-700/40" title="Under: Asphyxiation / Failed Break"></div>
+            <!-- Green Zone (Flawless) -->
+            <div class="absolute left-[35%] top-0 bottom-0 w-[30%] bg-emerald-900/50 border-r border-emerald-600/50" title="Target: Clean Cervical Snap"></div>
+            <!-- Red Zone (Over) -->
+            <div class="absolute left-[65%] top-0 bottom-0 w-[35%] bg-red-950/60" title="Over: Decapitation Risk"></div>
+            <!-- Needle Marker -->
+            <div id="gauge-needle" class="absolute top-0 bottom-0 w-1.5 bg-yellow-400 shadow-lg transition-all duration-150" style="left: 50%;"></div>
+          </div>
+          <div class="flex justify-between text-[9px] font-mono-code text-[#736250] mt-1">
+            <span>◄ Prolonged Choke / Dull Strike</span>
+            <span class="text-emerald-400 font-bold">Optimal Clean Fracture Zone (±6%)</span>
+            <span>Tissue Rupture / Tear ►</span>
+          </div>
+        </div>
 
         <!-- Mathematical Physics Readout -->
         <div class="grid grid-cols-3 gap-2 text-center text-xs iron-inset p-3 rounded border border-[#312519] mb-4">
@@ -217,7 +231,7 @@
             <span id="math-force-val" class="font-mono-code font-bold text-amber-300">0 ft-lbs</span>
           </div>
           <div>
-            <span class="block text-[#7b6955] uppercase text-[10px]">Target Anatomy Resistance</span>
+            <span class="block text-[#7b6955] uppercase text-[10px]">Target Resistance</span>
             <span id="math-resist-val" class="font-mono-code font-bold text-zinc-300">0 ft-lbs</span>
           </div>
           <div>
@@ -246,7 +260,7 @@
           <span>⚰ Mortuary Remains</span>
           <span id="mortuary-count" class="text-xs text-[#8c775f] font-mono-code">0 Bodies</span>
         </h2>
-        <p class="text-xs text-[#8c775f] mb-4">Subjects awaiting surgical extraction. Quality depends on the execution's precision.</p>
+        <p class="text-xs text-[#8c775f] mb-4">Subjects awaiting surgical extraction. Specimen purity depends on the execution's clean precision.</p>
         <div id="mortuary-list" class="space-y-2 overflow-y-auto max-h-[460px]"></div>
       </div>
 
@@ -268,17 +282,17 @@
         <div class="iron-inset p-4 rounded border border-[#2e2319]">
           <div class="flex justify-between items-center mb-2">
             <h4 class="font-cinzel text-xs uppercase tracking-wider text-amber-400">Harvested Contraband & Relic Vault</h4>
-            <span class="text-xs text-[#8c775f]">Available for Auction Wall</span>
+            <span class="text-xs text-[#8c775f]">Ready for Auction Wall Mount</span>
           </div>
           <div id="vault-items-container" class="flex flex-wrap gap-2 max-h-36 overflow-y-auto"></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 3: REDESIGNED AUCTION WALL (SELLING) -->
+    <!-- TAB 3: AUCTION WALL (SELLING) -->
     <section id="view-auction" class="tab-content hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4">
       
-      <!-- Left Column: Available Lots to Put Up for Auction -->
+      <!-- Left Column: Available Lots -->
       <div class="lg:col-span-5 iron-panel rounded-lg p-4 flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between pb-2 mb-3 border-b border-[#362a1e]">
@@ -364,12 +378,12 @@
         </div>
 
         <!-- Bargain Lots Grid -->
-        <div id="bargain-lots-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 overflow-y-auto max-h-[500px]"></div>
+        <div id="bargargain-lots-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 overflow-y-auto max-h-[500px]"></div>
       </div>
 
       <div class="iron-inset p-3 rounded border border-[#312519] mt-4 flex justify-between items-center text-xs text-[#8c775f]">
-        <span>⚡ <em>Market Principle:</em> Items bought here are routed to your Vault. Reselling them to collectors yields 95–99% profit margins.</span>
-        <span class="text-yellow-400 font-mono-code">Safe Stash Guaranteed</span>
+        <span>⚡ <em>Market Principle:</em> Items bought here route to your Vault. Flipping them on the Auction Wall yields high profit margins.</span>
+        <span class="text-yellow-400 font-mono-code">Contraband Stash</span>
       </div>
     </section>
 
@@ -450,7 +464,7 @@
 
       <div class="mt-4 pt-3 border-t border-[#312519] text-xs text-[#8c775f] flex justify-between items-center">
         <span>Logged under imperial decree at the High Magistrate's Court.</span>
-        <button onclick="clearCareerLogs()" class="text-red-400 hover:underline">Purge Local Records</button>
+        <button onclick="clearCareerLogs()" class="text-red-400 hover:underline">Reset Career Progress</button>
       </div>
     </section>
 
@@ -463,7 +477,7 @@
           <p class="text-xs text-[#8c775f] mb-4">Precision apparatus accessories that expand drop tolerances and dissection yields.</p>
           <div id="workshop-upgrades-list" class="space-y-3"></div>
         </div>
-        <p class="text-[11px] text-[#6a5b4a] italic mt-3">Upgrades permanently broaden mathematical error thresholds by ±6% to ±10%.</p>
+        <p class="text-[11px] text-[#6a5b4a] italic mt-3">Upgrades permanently broaden mathematical error thresholds by ±7% to ±10%.</p>
       </div>
 
       <!-- City Bribery & Guard Slush Fund -->
@@ -485,7 +499,7 @@
             <div class="iron-inset p-3 rounded border border-[#2e2319] flex items-center justify-between">
               <div>
                 <p class="font-cinzel font-bold text-amber-200 text-sm">Falsify Catacomb Manifest</p>
-                <p class="text-xs text-[#8c775f]">Erases all harvested body records (-40% Watch Heat)</p>
+                <p class="text-xs text-[#8c775f]">Erases harvested body records (-40% Watch Heat)</p>
               </div>
               <button onclick="applyBribe('manifest', 80)" class="px-3 py-1.5 rounded iron-panel border border-amber-600/70 text-amber-300 text-xs font-cinzel hover:bg-[#231b14]">
                 80 Sov
@@ -532,25 +546,23 @@
 
       <div class="space-y-6 text-xs md:text-sm leading-relaxed">
         
-        <!-- Chapter 1 -->
         <div class="iron-inset p-4 rounded border border-[#312519]">
           <h3 class="font-cinzel font-bold text-amber-300 text-base mb-2">I. The Long Drop Mechanics & Cervical Energy</h3>
           <p class="text-[#c7baa7] mb-2">
-            The long drop is designed to fracture the second and third cervical vertebrae cleanly, severing the spinal cord and causing instantaneous loss of sensation. It is not strangulation, nor is it decapitation.
+            The long drop is designed to fracture the second and third cervical vertebrae cleanly, severing the spinal cord. It is neither slow asphyxiation nor violent decapitation.
           </p>
           <div class="p-3 bg-[#130f0c] rounded border border-[#423425] font-mono-code text-xs text-amber-200 space-y-1 mb-2">
-            <p><strong>Universal Kinetic Rule:</strong> Ideal Impact Energy = 1,100 to 1,260 ft-lbs.</p>
-            <p><strong>Formula:</strong> Drop Length (Inches) = [Target Force (1,150 to 1,250 ft-lbs) / Body Weight in lbs] × 12</p>
-            <p><em>Example:</em> A subject of 160 lbs with average neck rigidity requires: (1,200 / 160) × 12 = <strong>90 inches</strong> (7'6").</p>
+            <p><strong>Kinetic Goal:</strong> Ideal Impact Energy = 1,180 to 1,260 ft-lbs (modified by neck rigidity traits).</p>
+            <p><strong>Formula:</strong> Drop Length (Inches) = [Target Energy / Body Weight (lbs)] × 12</p>
+            <p><em>Example:</em> A 160 lb subject with standard resistance requires: (1,200 / 160) × 12 = <strong>90 inches</strong> (7'6").</p>
           </div>
           <ul class="list-disc list-inside space-y-1 text-[#a4917a]">
-            <li><strong>Variance &lt; -15% (Too Short):</strong> Insufficient energy fails to snap vertebrae. The subject convulses and strangles over 10–15 minutes. Heavy penalty to Public Order.</li>
-            <li><strong>Variance &gt; +15% (Too Long):</strong> Excessive kinetic force tears soft cervical tissue, causing catastrophic decapitation and crowd hysteria. Heavy Crown fine.</li>
-            <li><strong>Ideal Zone (±6%):</strong> Instantaneous, humane snapping. High Crown Favor and high dissection purity.</li>
+            <li><strong>Variance &lt; -15% (Too Short):</strong> Insufficient energy. The subject convulses and strangles over 10–15 minutes. Heavy penalty to Public Order.</li>
+            <li><strong>Variance &gt; +15% (Too Long):</strong> Excessive kinetic force tears cervical tissue, causing catastrophic decapitation and crowd hysteria. Heavy Crown fine.</li>
+            <li><strong>Ideal Zone (±6%):</strong> Instantaneous humane fracture. High Crown Favor and high dissection purity.</li>
           </ul>
         </div>
 
-        <!-- Chapter 2 -->
         <div class="iron-inset p-4 rounded border border-[#312519]">
           <h3 class="font-cinzel font-bold text-amber-300 text-base mb-2">II. Halifax Guillotine & Cleaving Power</h3>
           <p class="text-[#c7baa7] mb-2">
@@ -558,18 +570,14 @@
           </p>
           <div class="p-3 bg-[#130f0c] rounded border border-[#423425] font-mono-code text-xs text-amber-200 space-y-1 mb-2">
             <p><strong>Kinetic Energy:</strong> Joules = Mass (kg) × Height (m) × 9.8 × (Grease Lubrication % / 100)</p>
-            <p><strong>Cleave Threshold:</strong> Must overcome [Neck Rigidity × 9.0] without exceeding safe track stress.</p>
+            <p><strong>Cleave Threshold:</strong> Must cleanly balance [Neck Rigidity × 8.0 + (Weight × 0.4)].</p>
           </div>
-          <p class="text-[#a4917a]">
-            Always apply animal tallow to the runner tracks. A dry track can jam midway, causing incomplete severance and scandal.
-          </p>
         </div>
 
-        <!-- Chapter 3 -->
         <div class="iron-inset p-4 rounded border border-[#312519]">
           <h3 class="font-cinzel font-bold text-amber-300 text-base mb-2">III. The Mortuary Harvest & Purity Ratings</h3>
           <p class="text-[#c7baa7] mb-2">
-            Once dispatched, remains are relocated to the cold slabs. Relic quality and organ preservation directly reflect the sentence's execution:
+            Once dispatched, remains are moved to the cold slabs. Relic quality and organ preservation directly reflect the sentence's precision:
           </p>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-2 font-mono-code text-xs mb-2">
             <div class="p-2 bg-[#120f0c] rounded border border-emerald-800 text-emerald-300">
@@ -584,30 +592,54 @@
           </div>
         </div>
 
-        <!-- Chapter 4 -->
-        <div class="iron-inset p-4 rounded border border-[#312519]">
-          <h3 class="font-cinzel font-bold text-amber-300 text-base mb-2">IV. Clandestine Arbitrage & The Auction Wall</h3>
-          <p class="text-[#c7baa7] mb-2">
-            To amass wealth beyond a hangman's stipend, exploit the gap between distant contraband seizures and private urban collectors:
-          </p>
-          <ul class="list-disc list-inside space-y-1 text-[#a4917a]">
-            <li><strong>Night Bargains:</strong> Shadow couriers sell seized gibbet sacks at <strong>1% to 5%</strong> of true appraisal value. A 150 Sovereign heart costs a mere 3–6 Sovereigns.</li>
-            <li><strong>The Auction Wall:</strong> Mount acquired contraband. Set an opening reserve. Distinct collectors will outbid each other:
-              <ul class="pl-6 list-circle">
-                <li><em>Dr. Malcorvus:</em> Pays premiums for brains, hearts, and anatomic specimens.</li>
-                <li><em>Madame Vespera:</em> Bids aggressively for Hangman ropes, fat tallow, and occult curios.</li>
-                <li><em>Antiquarian Vance:</em> Collects silver teeth sets and personal effects of the notorious.</li>
-                <li><em>Smuggler Hook:</em> Buys in bulk for foreign syndicates.</li>
-              </ul>
-            </li>
-            <li><strong>Managing Heat:</strong> Each auction completed adds +3% Watch Heat. Keep Heat below 50% by bribing beadles and falsifying catacomb records in the Workshop.</li>
-          </ul>
-        </div>
-
       </div>
     </section>
 
   </main>
+
+  <!-- ================= MODAL: EXECUTION INQUEST REPORT ================= -->
+  <div id="inquest-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center p-4 z-50 hidden">
+    <div class="parchment-panel border-2 border-[#d4af37] rounded-lg max-w-xl w-full p-6 space-y-4 shadow-2xl">
+      <div class="border-b border-[#4d3c2c] pb-2 flex justify-between items-center">
+        <div>
+          <h3 class="font-cinzel font-bold text-amber-300 text-lg">Imperial Inquest & Scaffold Record</h3>
+          <p id="inquest-subject-header" class="text-xs text-[#8c775f] font-mono-code"></p>
+        </div>
+        <span id="inquest-grade-badge" class="px-2.5 py-1 text-xs font-cinzel font-bold rounded"></span>
+      </div>
+
+      <!-- Narrative Output -->
+      <div class="iron-inset p-4 rounded border border-[#382b1d] space-y-2">
+        <p id="inquest-narrative" class="text-sm text-[#e4dacb] leading-relaxed italic"></p>
+      </div>
+
+      <!-- Mechanics Breakdown -->
+      <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono-code iron-inset p-3 rounded border border-[#2b2118]">
+        <div>
+          <span class="block text-[#7b6955] text-[10px] uppercase">Delivered Force</span>
+          <span id="inquest-delivered" class="text-amber-300 font-bold"></span>
+        </div>
+        <div>
+          <span class="block text-[#7b6955] text-[10px] uppercase">Break Resistance</span>
+          <span id="inquest-resistance" class="text-zinc-300 font-bold"></span>
+        </div>
+        <div>
+          <span class="block text-[#7b6955] text-[10px] uppercase">Impact Variance</span>
+          <span id="inquest-variance" class="font-bold"></span>
+        </div>
+      </div>
+
+      <!-- Municipal Consequences -->
+      <div class="text-xs space-y-1 font-mono-code text-[#a4917a] border-t border-[#3b2d1f] pt-2" id="inquest-rewards">
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="closeInquestModal()" class="px-6 py-2 bg-gradient-to-r from-amber-950 to-yellow-950 border border-amber-600 text-amber-200 font-cinzel font-bold text-xs rounded hover:border-amber-400 transition">
+          Sign & File Record
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= MODAL: GOD MODE ARBITER ================= -->
   <div id="god-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center p-4 z-50 hidden">
@@ -645,7 +677,7 @@
 
   <!-- ================= MODAL: GAME OVER ================= -->
   <div id="gameover-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden">
-    <div class="iron-panel border-2 border-red-700 rounded-lg max-w-md w-full p-6 text-center space-y-4">
+    <div class="iron-panel border-2 border-red-700 rounded-lg max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
       <h3 id="gameover-title" class="font-cinzel font-bold text-red-500 text-2xl">The Sentence Falls On You</h3>
       <p id="gameover-reason" class="text-xs text-[#d1c5b4] leading-relaxed"></p>
       <button onclick="resetGame()" class="px-6 py-2.5 rounded bg-red-950 border border-red-600 text-red-200 font-cinzel font-bold hover:bg-red-900 transition">
@@ -663,7 +695,7 @@
   <!-- ================= GAME ENGINE SCRIPT ================= -->
   <script>
     /* --------------------------------------------------------------------------
-       1. SYNTHESIZED WEB AUDIO API ENGINE
+       1. SYNTHESIZED WEB AUDIO API ENGINE (ZERO EXTERNAL ASSETS)
        -------------------------------------------------------------------------- */
     let audioCtx = null;
     let soundEnabled = true;
@@ -696,46 +728,72 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(160, t);
-        osc.frequency.exponentialRampToValueAtTime(35, t + 0.22);
+        osc.frequency.setValueAtTime(180, t);
+        osc.frequency.exponentialRampToValueAtTime(32, t + 0.24);
         gain.gain.setValueAtTime(0.85, t);
         gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(t);
         osc.stop(t + 0.26);
-      } else if (type === 'blade') {
-        // High metal swish + heavy metal thud
+      } else if (type === 'drop') {
+        // Heavy trapdoor clatter + sudden rope snap
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(520, t);
-        osc.frequency.exponentialRampToValueAtTime(80, t + 0.22);
-        gain.gain.setValueAtTime(0.4, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+        osc.frequency.setValueAtTime(260, t);
+        osc.frequency.exponentialRampToValueAtTime(45, t + 0.35);
+        gain.gain.setValueAtTime(0.9, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(t);
-        osc.stop(t + 0.25);
+        osc.stop(t + 0.4);
+      } else if (type === 'blade') {
+        // High metal shear swish + heavy chunk
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(620, t);
+        osc.frequency.exponentialRampToValueAtTime(60, t + 0.28);
+        gain.gain.setValueAtTime(0.5, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.32);
       } else if (type === 'coin') {
-        // Harmonic ringing coin chime
+        // Harmonic silver ringing coin
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(1400, t);
-        osc.frequency.exponentialRampToValueAtTime(1900, t + 0.12);
-        gain.gain.setValueAtTime(0.3, t);
+        osc.frequency.setValueAtTime(1450, t);
+        osc.frequency.exponentialRampToValueAtTime(1920, t + 0.12);
+        gain.gain.setValueAtTime(0.28, t);
         gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(t);
         osc.stop(t + 0.36);
+      } else if (type === 'gasp') {
+        // Low crowd gasp rumble
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(130, t);
+        osc.frequency.linearRampToValueAtTime(95, t + 0.4);
+        gain.gain.setValueAtTime(0.2, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.46);
       } else if (type === 'click') {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'square';
-        osc.frequency.setValueAtTime(380, t);
-        gain.gain.setValueAtTime(0.06, t);
+        osc.frequency.setValueAtTime(420, t);
+        gain.gain.setValueAtTime(0.05, t);
         gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -745,11 +803,19 @@
     }
 
     /* --------------------------------------------------------------------------
-       2. GAME STATE & PROCEDURAL DEFINITIONS
+       2. PROCEDURAL DEFINITIONS & STATE
        -------------------------------------------------------------------------- */
-    const FIRST_NAMES = ['Godfrey', 'Aldous', 'Vance', 'Silas', 'Corvus', 'Bartholomew', 'Agnes', 'Merrick', 'Gideon', 'Rowena', 'Crispin', 'Mortimer', 'Bram', 'Helena'];
-    const LAST_NAMES = ['Blackwood', 'Fray', 'Gallows-Bane', 'Crowley', 'Harrow', 'Cask', 'Graveur', 'Pike', 'Wycliffe', 'Winter', 'Malvo', 'Vex', 'Barrow'];
+    const FIRST_NAMES = ['Godfrey', 'Aldous', 'Vance', 'Silas', 'Corvus', 'Bartholomew', 'Agnes', 'Merrick', 'Gideon', 'Rowena', 'Crispin', 'Mortimer', 'Bram', 'Helena', 'Kester', 'Thomasine'];
+    const LAST_NAMES = ['Blackwood', 'Fray', 'Gallows-Bane', 'Crowley', 'Harrow', 'Cask', 'Graveur', 'Pike', 'Wycliffe', 'Winter', 'Malvo', 'Vex', 'Barrow', 'Oakes'];
     const TITLES = ['Apprentice', 'Scaffolder', 'High Bailiff', 'Master of the Black Gibbet'];
+
+    const TRAITS = [
+      { name: 'Bull-Necked', desc: '+25 Rigidity (demands extra force)', rigidityMod: 25 },
+      { name: 'Brittle-Spined', desc: '-15 Rigidity (prone to tearing)', rigidityMod: -15 },
+      { name: 'Crowd Idol', desc: 'Botching incites major peasant outrage', idol: true, rigidityMod: 0 },
+      { name: 'Royal Favorite', desc: 'Crown demands utmost perfection', favorite: true, rigidityMod: 0 },
+      { name: 'Stoic Veteran', desc: 'Standard anatomical resistance', rigidityMod: 0 }
+    ];
 
     const CRIMES = [
       { name: 'High Treason against Crown', decree: 'Clean Snap & Humane', baseNotoriety: 85 },
@@ -770,7 +836,7 @@
       { type: 'skull', name: "Flawless Trepanned Skull", baseVal: 140, category: 'Specimen', demand: 'Antiquarian' }
     ];
 
-    const state = {
+    let state = {
       day: 1,
       gold: 240,
       favor: 65,
@@ -779,14 +845,12 @@
       careerRankIndex: 0,
       selectedApparatus: 'gallows',
 
-      // Calibration controls
       calibration: {
         gallows: { dropInches: 75 },
         guillotine: { heightMeters: 2.2, bladeWeightKg: 45, trackGrease: 60 },
         axe: { strikeForceN: 680, bladeHone: 85 }
       },
 
-      // Lifetime Career Stats
       stats: {
         totalExecutions: 0,
         flawless: 0,
@@ -803,19 +867,16 @@
       mortuary: [],
       selectedMortuaryId: null,
 
-      vault: [], // User items for auction
+      vault: [],
 
-      // Auction Live Stage
       activeAuction: null,
       auctionInterval: null,
       selectedVaultItemId: null,
       reservePrice: 100,
 
-      // Night Bargains
       bargainLots: [],
       bargainRefreshCountdown: 4,
 
-      // Workshop Upgrades
       upgrades: {
         diamond_whetstones: false,
         silk_core_rope: false,
@@ -825,28 +886,63 @@
     };
 
     /* --------------------------------------------------------------------------
-       3. INITIALIZATION & PROCEDURAL GENERATORS
+       3. STAT CLAMPING HELPER
+       -------------------------------------------------------------------------- */
+    function adjustStat(statName, delta) {
+      if (typeof state[statName] === 'number') {
+        state[statName] = Math.max(0, Math.min(100, state[statName] + delta));
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       4. INITIALIZATION & STORAGE
        -------------------------------------------------------------------------- */
     function initGame() {
-      state.docket = [
-        generatePrisoner(),
-        generatePrisoner(),
-        generatePrisoner()
-      ];
-      state.selectedPrisonerId = state.docket[0].id;
+      const saved = localStorage.getItem('master_of_scaffolds_save');
+      if (saved) {
+        try {
+          const loaded = JSON.parse(saved);
+          state = Object.assign(state, loaded);
+        } catch(e) {
+          console.warn('Save parse error:', e);
+        }
+      }
 
-      populateBargainLots();
+      if (!state.docket || state.docket.length === 0) {
+        state.docket = [generatePrisoner(), generatePrisoner(), generatePrisoner()];
+      }
+      if (!state.selectedPrisonerId && state.docket.length > 0) {
+        state.selectedPrisonerId = state.docket[0].id;
+      }
+      if (!state.bargainLots || state.bargainLots.length === 0) {
+        populateBargainLots();
+      }
+
       renderApparatusControls();
       updateCalibrationPhysics();
       updateUI();
       renderStatsPage();
     }
 
+    function saveGame() {
+      try {
+        const copy = Object.assign({}, state);
+        copy.activeAuction = null;
+        if (copy.auctionInterval) clearInterval(copy.auctionInterval);
+        copy.auctionInterval = null;
+        localStorage.setItem('master_of_scaffolds_save', JSON.stringify(copy));
+      } catch (e) {
+        console.warn('Storage failed:', e);
+      }
+    }
+
     function generatePrisoner(customName = null, customWeight = null, customDecree = null) {
       const name = customName || (FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)] + ' ' + LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]);
       const crimeObj = CRIMES[Math.floor(Math.random() * CRIMES.length)];
-      const weight = customWeight ? parseInt(customWeight) : Math.floor(Math.random() * 80) + 125; // 125 to 205 lbs
-      const neckRigidity = Math.floor(Math.random() * 50) + 35; // 35 to 85 resistance
+      const trait = TRAITS[Math.floor(Math.random() * TRAITS.length)];
+      const weight = customWeight ? parseInt(customWeight) : Math.floor(Math.random() * 85) + 120; // 120 to 205 lbs
+      const baseNeck = Math.floor(Math.random() * 45) + 35;
+      const neckRigidity = Math.max(20, baseNeck + trait.rigidityMod);
       const endurance = Math.floor(Math.random() * 60) + 30;
 
       return {
@@ -856,8 +952,9 @@
         decree: customDecree || crimeObj.decree,
         weightLbs: weight,
         neckRigidity: neckRigidity,
+        trait: trait,
         endurance: endurance,
-        notoriety: Math.min(100, crimeObj.baseNotoriety + Math.floor(Math.random() * 15) - 7)
+        notoriety: Math.min(100, crimeObj.baseNotoriety + Math.floor(Math.random() * 14) - 7)
       };
     }
 
@@ -874,8 +971,7 @@
       for (let i = 0; i < 3; i++) {
         const relic = RELIC_BLUEPRINTS[Math.floor(Math.random() * RELIC_BLUEPRINTS.length)];
         const trueMarket = Math.floor(relic.baseVal * (1.2 + Math.random() * 0.9));
-        // Strict 1% to 5% acquisition pricing
-        const discountBasis = Math.floor(Math.random() * 5) + 1; // 1 to 5 %
+        const discountBasis = Math.floor(Math.random() * 5) + 1; // 1% to 5%
         const bargainPrice = Math.max(2, Math.round(trueMarket * (discountBasis / 100)));
         const discountPct = 100 - discountBasis;
 
@@ -894,7 +990,7 @@
     }
 
     /* --------------------------------------------------------------------------
-       4. APPARATUS CALIBRATION & PHYSICS FORMULAS
+       5. APPARATUS CONTROLS & PHYSICS CALIBRATION
        -------------------------------------------------------------------------- */
     function setApparatus(appKey) {
       state.selectedApparatus = appKey;
@@ -917,6 +1013,7 @@
     function renderApparatusControls() {
       const container = document.getElementById('calibration-controls');
       const app = state.selectedApparatus;
+      const p = getActivePrisoner();
 
       if (app === 'gallows') {
         const drop = state.calibration.gallows.dropInches;
@@ -926,11 +1023,11 @@
               <span class="text-[#a4917a] font-cinzel">Calculated Rope Drop Length:</span>
               <span class="text-amber-300 font-mono-code font-bold">${drop}" (${Math.floor(drop/12)}' ${drop%12}")</span>
             </div>
-            <input type="range" min="36" max="115" value="${drop}" class="w-full" oninput="setCalibrationParam('gallows', 'dropInches', this.value)">
+            <input type="range" min="30" max="130" value="${drop}" class="w-full" oninput="setCalibrationParam('gallows', 'dropInches', this.value)">
             <div class="flex justify-between text-[10px] text-[#6a5b4a] mt-1 font-mono-code">
-              <span>36" (Short Drop - Choke)</span>
-              <span>Imperial Formula: ~1,150–1,250 ft-lbs / Weight</span>
-              <span>115" (Severance Risk)</span>
+              <span>30" (Choke Risk)</span>
+              <span>Imperial Formula: ~1,180–1,260 ft-lbs / Weight</span>
+              <span>130" (Tear Risk)</span>
             </div>
           </div>
         `;
@@ -943,21 +1040,21 @@
                 <span class="text-[#a4917a] font-cinzel">Blade Fall Elevation (Meters):</span>
                 <span class="text-amber-300 font-mono-code font-bold">${g.heightMeters} m</span>
               </div>
-              <input type="range" min="1.0" max="3.4" step="0.1" value="${g.heightMeters}" class="w-full" oninput="setCalibrationParam('guillotine', 'heightMeters', this.value)">
+              <input type="range" min="1.0" max="3.5" step="0.1" value="${g.heightMeters}" class="w-full" oninput="setCalibrationParam('guillotine', 'heightMeters', this.value)">
             </div>
             <div>
               <div class="flex justify-between text-xs mb-1">
                 <span class="text-[#a4917a] font-cinzel">Mouton Wedge Weight (kg):</span>
                 <span class="text-amber-300 font-mono-code font-bold">${g.bladeWeightKg} kg</span>
               </div>
-              <input type="range" min="25" max="75" value="${g.bladeWeightKg}" class="w-full" oninput="setCalibrationParam('guillotine', 'bladeWeightKg', this.value)">
+              <input type="range" min="25" max="80" value="${g.bladeWeightKg}" class="w-full" oninput="setCalibrationParam('guillotine', 'bladeWeightKg', this.value)">
             </div>
             <div>
               <div class="flex justify-between text-xs mb-1">
-                <span class="text-[#a4917a] font-cinzel">Track Animal Tallow Lubrication (%):</span>
+                <span class="text-[#a4917a] font-cinzel">Track Tallow Lubrication (%):</span>
                 <span class="text-amber-300 font-mono-code font-bold">${g.trackGrease}%</span>
               </div>
-              <input type="range" min="20" max="100" value="${g.trackGrease}" class="w-full" oninput="setCalibrationParam('guillotine', 'trackGrease', this.value)">
+              <input type="range" min="15" max="100" value="${g.trackGrease}" class="w-full" oninput="setCalibrationParam('guillotine', 'trackGrease', this.value)">
             </div>
           </div>
         `;
@@ -970,11 +1067,11 @@
                 <span class="text-[#a4917a] font-cinzel">Manual Cleaving Strike Force (Newtons):</span>
                 <span class="text-amber-300 font-mono-code font-bold">${a.strikeForceN} N</span>
               </div>
-              <input type="range" min="350" max="950" step="10" value="${a.strikeForceN}" class="w-full" oninput="setCalibrationParam('axe', 'strikeForceN', this.value)">
+              <input type="range" min="300" max="1000" step="10" value="${a.strikeForceN}" class="w-full" oninput="setCalibrationParam('axe', 'strikeForceN', this.value)">
             </div>
             <div>
               <div class="flex justify-between text-xs mb-1">
-                <span class="text-[#a4917a] font-cinzel">Executioner's Whetstone Hone:</span>
+                <span class="text-[#a4917a] font-cinzel">Executioner's Whetstone Hone (%):</span>
                 <span class="text-amber-300 font-mono-code font-bold">${a.bladeHone}%</span>
               </div>
               <input type="range" min="30" max="100" value="${a.bladeHone}" class="w-full" oninput="setCalibrationParam('axe', 'bladeHone', this.value)">
@@ -996,17 +1093,16 @@
 
     function updateCalibrationPhysics() {
       const p = getActivePrisoner();
-      if (!p) return { variance: 0 };
+      if (!p) return { variance: 0, force: 0, resistance: 0 };
 
       let force = 0;
       let resistance = 0;
       let variance = 0;
 
       if (state.selectedApparatus === 'gallows') {
-        // Impact Energy = Weight (lbs) * (DropInches / 12)
         const dropFt = state.calibration.gallows.dropInches / 12;
         force = Math.round(p.weightLbs * dropFt);
-        resistance = 1180 + (p.neckRigidity * 2); // Target cervical break energy
+        resistance = 1180 + (p.neckRigidity * 2);
         variance = ((force - resistance) / resistance) * 100;
 
         document.getElementById('math-force-val').textContent = `${force} ft-lbs`;
@@ -1049,11 +1145,21 @@
       }
       varElem.textContent = desc;
 
+      // Update Kinetic Tolerance Needle Gauge
+      const needle = document.getElementById('gauge-needle');
+      const label = document.getElementById('gauge-ratio-label');
+      if (needle && label) {
+        // Map variance [-30%, +30%] to [0%, 100%]
+        const gaugePos = Math.max(0, Math.min(100, 50 + (roundedVar * 1.5)));
+        needle.style.left = `${gaugePos}%`;
+        label.textContent = `${roundedVar > 0 ? '+' : ''}${roundedVar}% ${Math.abs(roundedVar) <= 6 ? '(Flawless Zone)' : (roundedVar < 0 ? '(Under)' : '(Over)')}`;
+      }
+
       return { force, resistance, variance: roundedVar };
     }
 
     /* --------------------------------------------------------------------------
-       5. EXECUTION RESOLUTION & NARRATIVE
+       6. EXECUTION RESOLUTION & NARRATIVE INQUEST
        -------------------------------------------------------------------------- */
     function executeSentence() {
       const p = getActivePrisoner();
@@ -1069,8 +1175,15 @@
       let isFlawless = false;
       let isBotched = false;
       let purityGrade = 85;
+      let rewardGold = 35;
+      let favorDelta = 0;
+      let orderDelta = 0;
+      let heatDelta = 0;
 
-      playSound(app === 'guillotine' ? 'blade' : 'gavel');
+      // Play Sound
+      if (app === 'gallows') playSound('drop');
+      else if (app === 'guillotine') playSound('blade');
+      else playSound('blade');
 
       // Workshop equipment tolerances
       let tolerance = 0;
@@ -1081,83 +1194,140 @@
       const effectiveVar = Math.max(0, Math.abs(variance) - tolerance);
 
       if (effectiveVar <= 6) {
-        // Flawless
+        // FLAWLESS EXECUTION
         isFlawless = true;
         purityGrade = 98;
         if (p.decree === 'Agonizing Spectacle') {
-          outcome = `Clean instantaneous cervical break! However, the Crown Magistrate had demanded an Agonizing Spectacle. Favor dipped slightly.`;
-          state.favor -= 4;
-          state.order += 8;
+          outcome = `Clean instantaneous cervical break! However, the Crown Magistrate had demanded an Agonizing Spectacle for this criminal. The court bailiff logged subtle dissatisfaction with your excessive mercy.`;
+          favorDelta = -4;
+          orderDelta = 8;
         } else {
-          outcome = `Exquisite calibration. Immediate loss of sensation and clean sentence fulfillment. The municipal court notary logs complete satisfaction.`;
-          state.favor += 12;
-          state.order += 10;
+          outcome = `Exquisite calibration. The trapdoor yielded with a clean snap; the spinal column severed instantaneously without tearing dermal tissues. The High Magistrate's notary nodded with solemn approval.`;
+          favorDelta = 12;
+          orderDelta = 10;
         }
-        state.gold += 45;
-        state.heat = Math.max(0, state.heat - 2);
+        rewardGold = 50;
+        heatDelta = -2;
       } else if (variance < -15) {
-        // Under-drop / dull strike
+        // UNDER-CALIBRATED (STRANGULATION / JAM)
         isBotched = true;
-        purityGrade = 55;
+        purityGrade = 50;
+        playSound('gasp');
+
         if (p.decree === 'Agonizing Spectacle') {
-          outcome = `The under-calculated apparatus caused protracted convulsions. The mob gasped in terror, fulfilling the decree of Agonizing Spectacle!`;
-          state.favor += 10;
-          state.order -= 8;
-          state.heat += 5;
+          outcome = `The under-calculated drop failed to fracture the neck, producing protracted convulsions. The mob gasped in horror, precisely fulfilling the Crown decree for an Agonizing Spectacle!`;
+          favorDelta = 10;
+          orderDelta = -8;
+          heatDelta = 5;
+          rewardGold = 40;
         } else {
-          outcome = `Catastrophic under-calibration! The drop failed to fracture vertebrae; the condemned struggled violently for 12 agonized minutes. Angry cries filled the square.`;
-          state.favor -= 18;
-          state.order -= 20;
-          state.heat += 12;
+          outcome = `Catastrophic under-calibration! The kinetic drop lacked sufficient energy to snap vertebrae. ${p.name} struggled and convulsed violently for twelve agony-filled minutes. Angry shouts and stones rose from the crowd.`;
+          favorDelta = -18;
+          orderDelta = p.trait.idol ? -32 : -20;
+          heatDelta = 10;
+          rewardGold = 15;
         }
-        state.gold += 15;
       } else if (variance > 15) {
-        // Over-drop / violent decapitation
+        // OVER-CALIBRATED (VIOLENT RUPTURE / DECAPITATION)
         isBotched = true;
-        purityGrade = 45;
-        outcome = `Excessive kinetic impact! The tremendous kinetic shock severed the apparatus framing and tore through cervical tissues. Red droplets soaked the magistrates' dais.`;
-        state.favor -= 14;
-        state.order -= 16;
-        state.heat += 10;
-        state.gold = Math.max(5, state.gold - 20); // court fine
+        purityGrade = 40;
+        playSound('blade');
+        playSound('gasp');
+
+        outcome = `Excessive kinetic energy shock! The violent momentum tore soft tissues completely from the torso. Red arterial droplets showered the magistrate's dais. The court assessed a heavy negligence penalty.`;
+        favorDelta = p.trait.favorite ? -28 : -15;
+        orderDelta = -18;
+        heatDelta = 10;
+        rewardGold = 5; // Reduced stipend
       } else {
-        // Standard pass
+        // ACCEPTABLE STANDARD PASS
         purityGrade = 80;
-        outcome = `The sentence concluded within acceptable municipal tolerances.`;
-        state.favor += 5;
-        state.order += 2;
-        state.gold += 30;
+        outcome = `The sentence concluded within acceptable municipal tolerances. The subject dispatched without undue incident.`;
+        favorDelta = 6;
+        orderDelta = 3;
+        rewardGold = 35;
       }
+
+      // Formalin upgrade boost
+      if (state.upgrades.formalin_jars) {
+        purityGrade = Math.min(100, purityGrade + 15);
+      }
+
+      // Apply Stat Deltas
+      adjustStat('favor', favorDelta);
+      adjustStat('order', orderDelta);
+      adjustStat('heat', heatDelta);
+      state.gold += rewardGold;
 
       // Record Stats
       state.stats.totalExecutions++;
       if (isFlawless) state.stats.flawless++;
       if (isBotched) state.stats.botched++;
-      state.stats.goldEarnedLifetime += 45;
+      state.stats.goldEarnedLifetime += rewardGold;
 
-      // Add to Mortuary
-      state.mortuary.unshift({
+      // Add Cadaver to Mortuary
+      const corpseObj = {
         id: 'CORPSE-' + p.id,
         name: p.name,
         crime: p.crime,
         weight: p.weightLbs,
         purityGrade: purityGrade,
         harvestedParts: []
-      });
+      };
+      state.mortuary.unshift(corpseObj);
 
-      // Remove from docket
+      // Remove Condemned from Docket
       state.docket = state.docket.filter(x => x.id !== p.id);
       state.selectedPrisonerId = state.docket.length > 0 ? state.docket[0].id : null;
 
-      showToast('Sentence Concluded', `${p.name} processed. Yield sent to Mortuary.`);
+      // Launch Inquest Report
+      displayInquestModal(p, calc, outcome, isFlawless, isBotched, rewardGold, favorDelta, orderDelta, purityGrade);
+
       updateCareerTitle();
       updateUI();
       renderStatsPage();
+      saveGame();
       checkCivilFailure();
     }
 
+    function displayInquestModal(prisoner, calc, narrative, isFlawless, isBotched, gold, favorDelta, orderDelta, purity) {
+      document.getElementById('inquest-subject-header').textContent = `${prisoner.name} | ${prisoner.crime} (${prisoner.weightLbs} lbs)`;
+      document.getElementById('inquest-narrative').textContent = narrative;
+
+      const badge = document.getElementById('inquest-grade-badge');
+      if (isFlawless) {
+        badge.className = 'px-2.5 py-1 text-xs font-cinzel font-bold rounded bg-emerald-950 border border-emerald-600 text-emerald-300';
+        badge.textContent = 'Flawless Snap';
+      } else if (isBotched) {
+        badge.className = 'px-2.5 py-1 text-xs font-cinzel font-bold rounded bg-red-950 border border-red-600 text-red-300';
+        badge.textContent = 'Botched Execution';
+      } else {
+        badge.className = 'px-2.5 py-1 text-xs font-cinzel font-bold rounded bg-zinc-900 border border-zinc-600 text-amber-200';
+        badge.textContent = 'Standard Discharge';
+      }
+
+      document.getElementById('inquest-delivered').textContent = `${calc.force}`;
+      document.getElementById('inquest-resistance').textContent = `${calc.resistance}`;
+      document.getElementById('inquest-variance').textContent = `${calc.variance > 0 ? '+' : ''}${calc.variance}%`;
+      document.getElementById('inquest-variance').className = `font-bold ${Math.abs(calc.variance) <= 6 ? 'text-emerald-400' : 'text-red-400'}`;
+
+      document.getElementById('inquest-rewards').innerHTML = `
+        <div class="flex justify-between"><span>Court Stipend:</span><span class="text-yellow-400">+${gold} Sovereigns</span></div>
+        <div class="flex justify-between"><span>Crown Standing:</span><span class="${favorDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}">${favorDelta >= 0 ? '+' : ''}${favorDelta}% Favor</span></div>
+        <div class="flex justify-between"><span>Public Rest:</span><span class="${orderDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}">${orderDelta >= 0 ? '+' : ''}${orderDelta}% Order</span></div>
+        <div class="flex justify-between"><span>Mortuary Specimen Purity:</span><span class="text-amber-300">${purity}% Grade</span></div>
+      `;
+
+      document.getElementById('inquest-modal').classList.remove('hidden');
+    }
+
+    function closeInquestModal() {
+      playSound('click');
+      document.getElementById('inquest-modal').classList.add('hidden');
+    }
+
     /* --------------------------------------------------------------------------
-       6. MORTUARY EXTRACTION & SPECIMEN VAULT
+       7. MORTUARY DISSECTION & VAULT
        -------------------------------------------------------------------------- */
     function renderMortuary() {
       const list = document.getElementById('mortuary-list');
@@ -1165,7 +1335,7 @@
       document.getElementById('mortuary-count-badge').textContent = state.mortuary.length;
 
       if (state.mortuary.length === 0) {
-        list.innerHTML = `<p class="text-xs text-[#6a5b4a] italic p-3">The mortuary slabs are chilled and vacant. Carry out sentences on the Scaffold to harvest remains.</p>`;
+        list.innerHTML = `<p class="text-xs text-[#6a5b4a] italic p-3">The mortuary slabs are vacant. Fulfill sentences on the Scaffold to harvest remains.</p>`;
         document.getElementById('dissect-target-name').textContent = 'No Remains Selected';
         document.getElementById('dissect-target-sub').textContent = 'Select a cadaver to harvest anatomical specimens and scaffold relics.';
         document.getElementById('dissect-quality-badge').textContent = 'Purity: --';
@@ -1246,7 +1416,6 @@
       c.harvestedParts.push(type);
       state.stats.specimensHarvested++;
 
-      // Create Vault item
       const item = {
         id: 'ITM-' + Date.now(),
         name: `${name} (${c.name})`,
@@ -1256,25 +1425,26 @@
         stars: c.purityGrade > 90 ? '★★★' : (c.purityGrade > 70 ? '★★☆' : '★☆☆')
       };
       state.vault.unshift(item);
-      state.heat += 3; // cadaver disturbance
+      adjustStat('heat', 3);
 
-      showToast('Specimen Harvested', `${item.name} transferred to Contraband Vault. (Heat +3%)`);
+      showToast('Specimen Harvested', `${item.name} moved to Vault. (Heat +3%)`);
 
       if (c.harvestedParts.length >= 3) {
         state.mortuary = state.mortuary.filter(x => x.id !== c.id);
         state.selectedMortuaryId = state.mortuary.length > 0 ? state.mortuary[0].id : null;
-        showToast('Cadaver Released', `Skeletal remains of ${c.name} conveyed to the lime pit.`);
+        showToast('Cadaver Released', `Skeletal remains of ${c.name} conveyed to the municipal lime pit.`);
       }
 
       renderMortuary();
       renderVault();
       renderStatsPage();
+      saveGame();
     }
 
     function renderVault() {
       const container = document.getElementById('vault-items-container');
       if (state.vault.length === 0) {
-        container.innerHTML = `<span class="text-xs text-[#6a5b4a] italic">Vault is currently empty. Extract specimens or acquire Night Bargains.</span>`;
+        container.innerHTML = `<span class="text-xs text-[#6a5b4a] italic">Vault is vacant. Extract specimens or acquire Night Bargains.</span>`;
         return;
       }
 
@@ -1288,14 +1458,14 @@
     }
 
     /* --------------------------------------------------------------------------
-       7. REDESIGNED AUCTION WALL (SELLING ENGINE)
+       8. AUCTION WALL (SELLING ENGINE)
        -------------------------------------------------------------------------- */
     function renderAuctionWallView() {
       const list = document.getElementById('auction-inventory-list');
       document.getElementById('auction-inv-count').textContent = `${state.vault.length} Lots`;
 
       if (state.vault.length === 0) {
-        list.innerHTML = `<p class="text-xs text-[#6a5b4a] italic p-3">No inventory lots available. Harvest specimens in the Mortuary or purchase Night Bargains to list here.</p>`;
+        list.innerHTML = `<p class="text-xs text-[#6a5b4a] italic p-3">No contraband available. Dissect cadavers or secure Night Bargains to list lots here.</p>`;
         return;
       }
 
@@ -1303,7 +1473,7 @@
         <div onclick="selectVaultItemForAuction('${item.id}')" class="iron-inset p-2.5 rounded border ${state.selectedVaultItemId === item.id ? 'border-[#d4af37] bg-[#1a140f]' : 'border-[#312519] hover:border-[#5c4731]'} cursor-pointer transition flex justify-between items-center text-xs">
           <div>
             <p class="font-cinzel font-bold text-amber-200">${item.name}</p>
-            <p class="text-[10px] text-[#8c775f]">${item.category} Relic — Purity: <span class="text-amber-400">${item.stars || '★★☆'}</span></p>
+            <p class="text-[10px] text-[#8c775f]">${item.category} Relic — Grade: <span class="text-amber-400">${item.stars || '★★☆'}</span></p>
           </div>
           <div class="text-right">
             <span class="text-yellow-400 font-mono-code font-bold text-sm">${item.baseVal} Sov</span>
@@ -1314,7 +1484,7 @@
 
     function selectVaultItemForAuction(itemId) {
       if (state.activeAuction) {
-        showToast('Auction Running', 'Conclude the lot under the gavel before mounting a new lot.');
+        showToast('Auction In Progress', 'Conclude the active gavel lot before mounting a new lot.');
         return;
       }
       state.selectedVaultItemId = itemId;
@@ -1346,7 +1516,6 @@
       if (!item) return;
 
       playSound('gavel');
-      // Remove from vault
       state.vault = state.vault.filter(i => i.id !== item.id);
       state.selectedVaultItemId = null;
 
@@ -1367,7 +1536,7 @@
       addAuctionBanter(`Auction opens for "${item.name}"! Opening reserve placed at ${state.reservePrice} Sovereigns.`);
 
       if (state.auctionInterval) clearInterval(state.auctionInterval);
-      state.auctionInterval = setInterval(auctionFloorTick, 1800);
+      state.auctionInterval = setInterval(auctionFloorTick, 1700);
     }
 
     function auctionFloorTick() {
@@ -1385,8 +1554,7 @@
       ];
 
       if (lot.round <= lot.maxRounds) {
-        // Find competing bidder
-        const candidates = bidders.filter(b => b.bias === lot.item.category || b.bias === 'Universal' || Math.random() > 0.4);
+        const candidates = bidders.filter(b => b.bias === lot.item.category || b.bias === 'Universal' || Math.random() > 0.45);
         const b = candidates[Math.floor(Math.random() * candidates.length)];
 
         const increment = Math.floor(Math.random() * 35) + 20;
@@ -1404,7 +1572,6 @@
         lot.round++;
         renderLiveAuctionBanner();
       } else {
-        // Gavel falls automatically
         finalizeAuctionSale();
       }
     }
@@ -1427,7 +1594,7 @@
       state.gold += profit;
       state.stats.goldEarnedLifetime += profit;
       state.stats.arbitrageProfit += profit;
-      state.heat += 3; // Auction whispers
+      adjustStat('heat', 3);
 
       addAuctionBanter(`[SOLD] Gavel dropped! ${lot.item.name} awarded to ${lot.highBidder} for ${profit} Sovereigns.`);
       showToast('Lot Sold!', `${lot.item.name} sold for ${profit} Sov to ${lot.highBidder}. (Heat +3%)`);
@@ -1440,6 +1607,7 @@
       renderLiveAuctionBanner();
       updateUI();
       renderStatsPage();
+      saveGame();
       checkCivilFailure();
     }
 
@@ -1482,10 +1650,10 @@
     }
 
     /* --------------------------------------------------------------------------
-       8. NIGHT BARGAINS (BUYING 1% - 5% CONTRABAND)
+       9. NIGHT BARGAINS (BUYING 1-5% CONTRABAND)
        -------------------------------------------------------------------------- */
     function renderBargainGrid() {
-      const grid = document.getElementById('bargain-lots-grid');
+      const grid = document.getElementById('bargargain-lots-grid');
       document.getElementById('bargain-timer').textContent = `${state.bargainRefreshCountdown} Dawn Cycles`;
 
       grid.innerHTML = state.bargainLots.map(lot => `
@@ -1531,23 +1699,22 @@
       playSound('coin');
       state.gold -= lot.price;
 
-      // Add to vault
       state.vault.unshift({
         id: 'ITM-' + Date.now(),
         name: lot.itemName,
         category: lot.demand,
         baseVal: lot.trueAppraisal,
-        purity: 90,
+        purity: 92,
         stars: '★★★'
       });
 
-      // Remove from bargain catalog
       state.bargainLots = state.bargainLots.filter(l => l.id !== id);
-
-      showToast('Contraband Secured', `Purchased at ${lot.price} Sov (Valued at ${lot.trueAppraisal} Sov). Sent to Vault!`);
+      showToast('Contraband Secured', `Purchased at ${lot.price} Sov (Valued at ${lot.trueAppraisal} Sov). Routed to Vault.`);
+      
       renderBargainGrid();
       renderVault();
       updateUI();
+      saveGame();
     }
 
     function bribeBargainRunner() {
@@ -1558,15 +1725,15 @@
       playSound('coin');
       state.gold -= 10;
       populateBargainLots();
-      showToast('Smuggler Bribed', 'Fresh contraband cargo delivered from the outer provinces.');
+      showToast('Smuggler Bribed', 'Fresh contraband cargo brought from the outer districts.');
       updateUI();
+      saveGame();
     }
 
     /* --------------------------------------------------------------------------
-       9. CAREER STATS PAGE & TITLES
+       10. CAREER PROGRESSION & STATS
        -------------------------------------------------------------------------- */
     function updateCareerTitle() {
-      // 1. Apprentice, 2. Scaffolder (5 clean), 3. High Bailiff (1000 sov), 4. Master (15 clean & 2500 sov)
       if (state.stats.flawless >= 15 && state.stats.goldEarnedLifetime >= 2500) {
         state.careerRankIndex = 3;
       } else if (state.stats.goldEarnedLifetime >= 1000) {
@@ -1594,7 +1761,6 @@
       const accuracy = state.stats.totalExecutions > 0 ? Math.round((state.stats.flawless / state.stats.totalExecutions) * 100) : 100;
       document.getElementById('st-accuracy').textContent = `${accuracy}%`;
 
-      // Highlight active title card
       for (let i = 1; i <= 4; i++) {
         const card = document.getElementById('rank-card-' + i);
         if (card) {
@@ -1610,23 +1776,20 @@
     }
 
     function clearCareerLogs() {
-      state.stats.totalExecutions = 0;
-      state.stats.flawless = 0;
-      state.stats.botched = 0;
-      state.stats.specimensHarvested = 0;
-      state.stats.arbitrageProfit = 0;
-      renderStatsPage();
-      showToast('Records Purged', 'Local service tallies reset.');
+      if (confirm('Reset your entire executioner career record and reset tenure?')) {
+        localStorage.removeItem('master_of_scaffolds_save');
+        location.reload();
+      }
     }
 
     /* --------------------------------------------------------------------------
-       10. WORKSHOP UPGRADES & RANDOM CIVIC ENCOUNTERS
+       11. WORKSHOP UPGRADES & BRIBERY
        -------------------------------------------------------------------------- */
     const WORKSHOP_DEFS = [
       { key: 'diamond_whetstones', name: 'Saxon Diamond Whetstones', cost: 130, desc: 'Sharpens execution axes, widening manual stroke tolerance by ±8%.' },
       { key: 'silk_core_rope', name: 'Braided Flemish Silk Core', cost: 110, desc: 'Eliminates sudden cord recoil and widens Long Drop tolerance by ±8%.' },
-      { key: 'tallow_barrels', name: 'Refined Whale Tallow Barrels', cost: 140, desc: 'Increases Guillotine runner track speed and reduces friction jams.' },
-      { key: 'formalin_jars', name: 'Venetian Formalin Glassware', cost: 160, desc: 'Elevates Mortuary harvest purity by +15% on all dissected organs.' }
+      { key: 'tallow_barrels', name: 'Refined Whale Tallow Barrels', cost: 140, desc: 'Increases Guillotine runner track speed and prevents track friction jams.' },
+      { key: 'formalin_jars', name: 'Venetian Formalin Glassware', cost: 160, desc: 'Elevates Mortuary harvest purity by +15% across all extracted relics.' }
     ];
 
     function renderWorkshop() {
@@ -1653,7 +1816,7 @@
 
     function purchaseUpgrade(key, cost) {
       if (state.gold < cost) {
-        showToast('Insufficient Gold', 'You cannot afford this guild apparatus upgrade.');
+        showToast('Insufficient Gold', 'You cannot afford this guild upgrade.');
         return;
       }
       playSound('coin');
@@ -1663,6 +1826,7 @@
       renderWorkshop();
       updateCalibrationPhysics();
       updateUI();
+      saveGame();
     }
 
     function applyBribe(type, cost) {
@@ -1674,19 +1838,20 @@
       state.gold -= cost;
 
       if (type === 'rum') {
-        state.heat = Math.max(0, state.heat - 15);
+        adjustStat('heat', -15);
         showToast('Watch Quieted', 'The gate beadle accepted the rum cask (-15% Heat).');
       } else if (type === 'manifest') {
-        state.heat = Math.max(0, state.heat - 40);
+        adjustStat('heat', -40);
         showToast('Records Altered', 'Catacomb register altered to conceal extractions (-40% Heat).');
       } else if (type === 'tithe') {
-        state.favor = Math.min(100, state.favor + 15);
+        adjustStat('favor', 15);
         showToast('Cathedral Tithe', 'Canons praised your civic piety (+15% Favor).');
       } else if (type === 'ale') {
-        state.order = Math.min(100, state.order + 20);
+        adjustStat('order', 20);
         showToast('Ale Distributed', 'Peasants toast to order in the market (+20% Order).');
       }
       updateUI();
+      saveGame();
     }
 
     function triggerRandomCivicEvent() {
@@ -1695,23 +1860,21 @@
       const titleElem = document.getElementById('event-title');
       const descElem = document.getElementById('event-desc');
 
-      if (roll < 0.25) {
-        // Watch Inspection
+      if (roll < 0.28) {
         alertBox.classList.remove('hidden');
         titleElem.textContent = 'Night Watch Cellar Inspection';
         if (state.heat > 50) {
           state.gold = Math.max(0, state.gold - 60);
-          state.heat = Math.max(0, state.heat - 20);
-          descElem.textContent = 'Officers discovered irregular formalin jars in your shed! You paid 60 Sovereigns in urgent hush money.';
+          adjustStat('heat', -20);
+          descElem.textContent = 'Officers discovered suspicious jars in your shed! You paid 60 Sovereigns in urgent hush money.';
         } else {
           state.stats.raidsEvaded++;
-          descElem.textContent = 'Watch beadles inspected your workshop, finding only official guild logbooks. Inspection cleared cleanly!';
+          descElem.textContent = 'Watch beadles inspected your workshop, finding only official guild logs. Inspection cleared cleanly!';
         }
-      } else if (roll > 0.75) {
-        // Barber-Surgeon Rush Order
+      } else if (roll > 0.72) {
         alertBox.classList.remove('hidden');
         titleElem.textContent = 'Barber-Surgeon Academy Rush Order';
-        descElem.textContent = 'The Medical University has offered a 50 Sovereign bonus for any clean specimen extracted before dusk.';
+        descElem.textContent = 'The Medical University has issued a 50 Sovereign bonus for any clean anatomical specimens extracted before dusk.';
         state.gold += 50;
       } else {
         alertBox.classList.add('hidden');
@@ -1719,20 +1882,19 @@
     }
 
     /* --------------------------------------------------------------------------
-       11. TURN / DAWN PROGRESSION & CIVIL CHECKS
+       12. DAWN ADVANCEMENT & CIVIL CHECKS
        -------------------------------------------------------------------------- */
     function advanceDay() {
       playSound('gavel');
       state.day++;
 
-      // Replenish docket
-      if (state.docket.length < 3) state.docket.push(generatePrisoner());
-      if (state.docket.length < 3) state.docket.push(generatePrisoner());
+      while (state.docket.length < 3) {
+        state.docket.push(generatePrisoner());
+      }
       if (!state.selectedPrisonerId && state.docket.length > 0) {
         state.selectedPrisonerId = state.docket[0].id;
       }
 
-      // Night bargain cycle
       state.bargainRefreshCountdown--;
       if (state.bargainRefreshCountdown <= 0) {
         state.bargainRefreshCountdown = 4;
@@ -1740,12 +1902,11 @@
         showToast('Night Ledger Renewed', 'Smugglers replenished the 1-5% contraband catalog.');
       }
 
-      // Random Civic Events
       triggerRandomCivicEvent();
-
-      showToast(`Dawn of Day ${state.day}`, 'Gibbet bells toll. New docket logged by court.');
+      showToast(`Dawn of Day ${state.day}`, 'Gibbet bells toll across the city square.');
       updateUI();
       renderStatsPage();
+      saveGame();
       checkCivilFailure();
     }
 
@@ -1761,7 +1922,7 @@
         reason = 'The Crown revoked your executioner charter following relentless botches and disregard of royal decrees. Cast into the lowest debtors dungeon.';
       } else if (state.order <= 0) {
         failed = true;
-        reason = 'An armed mob of enraged peasants stormed the platform with hammers and iron brands, tearing the scaffold timber to kindling.';
+        reason = 'An armed mob of enraged peasants stormed the platform with torches and sledgehammers, tearing the scaffold timber to kindling.';
       }
 
       if (failed) {
@@ -1771,22 +1932,12 @@
     }
 
     function resetGame() {
-      document.getElementById('gameover-modal').classList.add('hidden');
-      state.day = 1;
-      state.gold = 240;
-      state.favor = 65;
-      state.order = 70;
-      state.heat = 12;
-      state.vault = [];
-      state.mortuary = [];
-      state.activeAuction = null;
-      if (state.auctionInterval) clearInterval(state.auctionInterval);
-      initGame();
-      showToast('Charter Reissued', 'You assume the black hood anew.');
+      localStorage.removeItem('master_of_scaffolds_save');
+      location.reload();
     }
 
     /* --------------------------------------------------------------------------
-       12. GOD MODE CONSOLE CHEATS
+       13. ARBITER CHEATS (GOD MODE)
        -------------------------------------------------------------------------- */
     function cheatAddGold(amt) {
       state.gold += amt;
@@ -1814,15 +1965,21 @@
       if (!p) return;
 
       if (state.selectedApparatus === 'gallows') {
-        const idealDrop = Math.round((1200 / p.weightLbs) * 12);
-        state.calibration.gallows.dropInches = Math.max(36, Math.min(115, idealDrop));
+        const targetEnergy = 1180 + (p.neckRigidity * 2);
+        const idealDrop = Math.round((targetEnergy / p.weightLbs) * 12);
+        state.calibration.gallows.dropInches = Math.max(30, Math.min(130, idealDrop));
       } else if (state.selectedApparatus === 'guillotine') {
-        state.calibration.guillotine.heightMeters = 2.4;
-        state.calibration.guillotine.bladeWeightKg = 55;
-        state.calibration.guillotine.trackGrease = 85;
+        const targetResistance = Math.round(p.neckRigidity * 8.0 + (p.weightLbs * 0.4));
+        state.calibration.guillotine.bladeWeightKg = 50;
+        state.calibration.guillotine.trackGrease = 80;
+        const greaseMultiplier = (80 / 100) * 0.85 + 0.15;
+        const idealHeight = (targetResistance / (50 * 9.8 * greaseMultiplier)).toFixed(1);
+        state.calibration.guillotine.heightMeters = Math.max(1.0, Math.min(3.5, parseFloat(idealHeight)));
       } else if (state.selectedApparatus === 'axe') {
-        state.calibration.axe.strikeForceN = Math.round(p.neckRigidity * 7.5 + 160);
-        state.calibration.axe.bladeHone = 95;
+        const targetResistance = Math.round(p.neckRigidity * 7.5 + 160);
+        state.calibration.axe.bladeHone = 90;
+        const idealForce = Math.round(targetResistance / 0.9);
+        state.calibration.axe.strikeForceN = Math.max(300, Math.min(1000, idealForce));
       }
 
       playSound('click');
@@ -1832,8 +1989,8 @@
     }
 
     function cheatSpawnNoble() {
-      const noble = generatePrisoner('Lord Cassian of the Bloodline', 180, 'Clean Snap & Humane');
-      noble.notoriety = 98;
+      const noble = generatePrisoner('Lord Cassian of the Bloodline', 178, 'Clean Snap & Humane');
+      noble.notoriety = 99;
       state.docket.unshift(noble);
       state.selectedPrisonerId = noble.id;
       playSound('gavel');
@@ -1850,19 +2007,19 @@
     }
 
     /* --------------------------------------------------------------------------
-       13. UI BINDINGS, DOCKET RENDER & TOASTS
+       14. UI RENDERING & TOASTS
        -------------------------------------------------------------------------- */
     function updateUI() {
       document.getElementById('stat-day').textContent = state.day;
       document.getElementById('stat-gold').textContent = state.gold;
 
-      document.getElementById('stat-favor-bar').style.width = state.favor + '%';
+      document.getElementById('stat-favor-bar').style.width = Math.min(100, Math.max(0, state.favor)) + '%';
       document.getElementById('stat-favor-txt').textContent = state.favor + '%';
 
-      document.getElementById('stat-order-bar').style.width = state.order + '%';
+      document.getElementById('stat-order-bar').style.width = Math.min(100, Math.max(0, state.order)) + '%';
       document.getElementById('stat-order-txt').textContent = state.order + '%';
 
-      document.getElementById('stat-heat-bar').style.width = state.heat + '%';
+      document.getElementById('stat-heat-bar').style.width = Math.min(100, Math.max(0, state.heat)) + '%';
       document.getElementById('stat-heat-txt').textContent = state.heat + '%';
 
       renderDocketList();
@@ -1892,7 +2049,7 @@
             </div>
             <p class="text-[11px] text-[#8c775f] line-clamp-1">${p.crime}</p>
             <div class="flex justify-between text-[10px] text-[#6b5a48] mt-1.5">
-              <span>Decree: <span class="text-amber-300">${p.decree}</span></span>
+              <span>Trait: <span class="text-amber-300">${p.trait ? p.trait.name : 'Standard'}</span></span>
               <span>Notoriety: ${p.notoriety}%</span>
             </div>
           </div>
@@ -1941,8 +2098,8 @@
             <span class="text-zinc-300">${p.neckRigidity} pts</span>
           </div>
           <div>
-            <span class="text-[#7b6955] block text-[10px]">Physical Endurance:</span>
-            <span class="text-zinc-300">${p.endurance} pts</span>
+            <span class="text-[#7b6955] block text-[10px]">Physical Trait:</span>
+            <span class="text-amber-200">${p.trait ? p.trait.name : 'None'}</span>
           </div>
           <div>
             <span class="text-[#7b6955] block text-[10px]">Public Notoriety:</span>
